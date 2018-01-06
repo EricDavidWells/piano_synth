@@ -59,9 +59,12 @@ class Note {
  }
 
  void display(){
-   if (millis()>t*1000 && millis()<(t+l)*1000){
-     stroke(c);
-     fill(c);
+   int time = millis();
+   if (time>t*1000 && time<(t+l)*1000){
+     int alpha = min((time-int(t*1000))*255/500, 255);  // fading function
+     alpha = min(alpha, min((int((t+l)*1000)-time)*255/500, 255));
+     stroke(c, alpha);
+     fill(c, alpha);
      rect(width/88*p, height-width/172, width/44, width/44);
    }
  }
