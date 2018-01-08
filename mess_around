@@ -1,0 +1,12 @@
+
+string = 'note_off channel=0 note=48 velocity=95 time=240'
+
+string2 = string.split()
+print(string2)
+
+for pos, string in enumerate(string2):
+    string = string.replace('_', '=')
+    string2[pos] = string.split('=')
+
+print(string2)
+
