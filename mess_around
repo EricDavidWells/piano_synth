@@ -1,0 +1,29 @@
+
+string = 'note_off channel=0 note=48 velocity=95 time=240'
+
+string2 = string.split()
+# print(string2)
+
+for pos, string in enumerate(string2):
+    string = string.replace('_', '=')
+    string2[pos] = string.split('=')
+    print(string)
+
+# print(string2)
+
+
+# # seperates note on and off signals into note volume, length, pitch, and time
+# for n, msg in enumerate(note_msgs):
+#     if msg.type == 'note_on':
+#         note_length = 0
+#         note_pitch = msg.note
+#         note_volume = msg.velocity
+#         for n_, msg_ in enumerate(note_msgs[n+1:], n+1):
+#             note_length += msg_.time
+#             if msg_.note == msg.note and msg_.type == 'note_off':
+#                 break
+#
+#         print(note_length)
+#         # notes.append([note_length, note_pitch, note_volume])
+
+
