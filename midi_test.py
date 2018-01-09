@@ -1,38 +1,60 @@
 
+import csv
 import mido
 from mido import MidiFile
 
-# open a midi file
-mid = MidiFile(r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\c-major-scale-on-treble-clef.mid')
-print(mid.type)     # midi file type (0, 1, or 2)
-print(mid.length)   # time length in seconds
-print(mid.ticks_per_beat)   # ticks per beat, tick is the smallest time unit
+midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\C_Major_Scale_-_C_Major_Scale.mid'
+# midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\c-major-scale-on-treble-clef.mid'
+outputfilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\NoteFiles\notedata.csv'
 
-# mido.get_output_names()   # gets available output port names
+
+# open a midi file
+mid = MidiFile(midifilename)
+
+type = mid.type     # midi file type (0, 1, or 2)
+total_length = mid.length   # time length in seconds
+tpb = mid.ticks_per_beat   # ticks per beat, tick is the smallest time unit
+notemax = 127
+
+# outports = mido.get_output_names()   # gets available output port names
 
 note_msgs = []
+tempo = 0   # in microseconds per beat
 for i, track in enumerate(mid.tracks):
     for msg in track:
+        if msg.is_meta:
+            if msg.type == 'set_tempo':
+                tempo = msg.tempo
         if 'note' in msg.type:
             note_msgs.append(msg)
-            print(msg)
 
+t2s = tempo*1e-6/tpb    # ticks to seconds conversion (ms/beat)(s/ms)(beat/tick)(tick) = (s)
+t2us = tempo/tpb    # ticks to micro seconds conversion
 notes = []
-notemax = 127
 basetime = 0
-# seperates note on and off signals into note volume, length, pitch, and time
-for n, msg in enumerate(note_msgs): # iterate through all note messages
-    basetime += msg.time
+# separates note on and off signals into note volume, length, pitch, and time
+for n, msg in enumerate(note_msgs):     # iterate through all note messages
+    basetime += msg.time    # time that note starts in ticks
     if msg.type == 'note_on':   # if the msg is to turn note on
-        note_length = 0
+        note_l = 0  # note length
         for n_, msg_ in enumerate(note_msgs[n+1:], n+1):
-            note_length += msg_.time
+            note_l += msg_.time
             if msg_.note == msg.note and 'note' in msg_.type:
-                note_pitch = msg.note
-                note_volume = msg.velocity
-                note_time = basetime
-                notes.append([note_pitch, note_volume, note_length, note_time])
+                note_p = msg.note   # note pitch
+                note_v = msg.velocity   # note volume
+                notes.append({'pitch': note_p, 'volume': note_v, 'length': note_l, 'time': basetime})
                 break
 
-for note in notes:
-    print(note)
+
+# write notes to a csv file
+with open(outputfilename, 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    for note in notes:
+
+        p = str(note['pitch'])
+        v = str(note['volume'])
+        l = str(int(note['length'] * t2us))
+        t = str(int(note['time'] * t2us))
+
+        writer.writerow([p, v, l, t])
+
