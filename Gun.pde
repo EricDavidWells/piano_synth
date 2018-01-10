@@ -4,6 +4,7 @@ class Gun {
  PVector pos;
  float w;
  float h;
+ float g = 9.81;
  
  Gun(color c_, float xpos, float ypos, float w_, float h_){
    c = c_;
