@@ -3,9 +3,9 @@ import csv
 import mido
 from mido import MidiFile
 
-midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\C_Major_Scale_-_C_Major_Scale.mid'
+midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\for_elise_by_beethoven.mid'
 # midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\c-major-scale-on-treble-clef.mid'
-outputfilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\NoteFiles\notedata.csv'
+outputfilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\NoteFiles\furelise.csv'
 
 
 # open a midi file
