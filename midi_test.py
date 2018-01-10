@@ -7,6 +7,7 @@ midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFi
 # midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\c-major-scale-on-treble-clef.mid'
 outputfilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\NoteFiles\furelise.csv'
 
+timestart_delay = 5
 
 # open a midi file
 mid = MidiFile(midifilename)
@@ -22,6 +23,7 @@ note_msgs = []
 tempo = 0   # in microseconds per beat
 for i, track in enumerate(mid.tracks):
     for msg in track:
+        print(msg)
         if msg.is_meta:
             if msg.type == 'set_tempo':
                 tempo = msg.tempo
@@ -31,7 +33,7 @@ for i, track in enumerate(mid.tracks):
 t2s = tempo*1e-6/tpb    # ticks to seconds conversion (ms/beat)(s/ms)(beat/tick)(tick) = (s)
 t2us = tempo/tpb    # ticks to micro seconds conversion
 notes = []
-basetime = 0
+basetime = timestart_delay
 # separates note on and off signals into note volume, length, pitch, and time
 for n, msg in enumerate(note_msgs):     # iterate through all note messages
     basetime += msg.time    # time that note starts in ticks

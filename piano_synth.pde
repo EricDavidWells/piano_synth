@@ -12,9 +12,14 @@ Note middle_c;
 String[] notes_str;
 String notefilename = "\\NoteFiles\\furelise.csv";
 ArrayList<Note> notes;
+Gun gun;
+
+int minlength = 0;
+int fadetime = 250000;
 
 void setup() {
  size(1000, 700);
+ colorMode(HSB);
  
  plat_h = height/20;
  plat_w = width/2;
@@ -32,14 +37,17 @@ void setup() {
  notes_str = loadStrings(notefilename);
  for (int i = 0 ; i < notes_str.length; i++) {
    
+   color c = color(0, 0, 0);
    String[] line = split(notes_str[i], ',');
    int pitch = int(line[0])-20;
    int volume = int(line[1]);
-   int len = int(line[2]);
+   int len = max(int(line[2]), minlength);
    int time = int(line[3]);
-   Note note = new Note(255, pitch, len, time, volume);
+   Note note = new Note(c, pitch, len, time, volume);
    notes.add(note);
  }
+ 
+ gun = new Gun(color(255), tank_x, tank_y, tank_w, tank_h);
 
 }
 
@@ -50,51 +58,13 @@ void draw() {
   fill(255);
   rectMode(CENTER);
   rect(plat_x, plat_y, plat_w, plat_h);
-  stroke(0, 255, 0);
-  fill(0, 255, 0);
-  rect(tank_x, tank_y, tank_w, tank_h);
   
-  middle_c.display();
+  gun.display();
+  
+  //middle_c.display();
   for (int i = 0; i<notes.size(); i++){
     Note note = notes.get(i);
     note.display();
   }
   
-}
-
-class Note {
- 
- color c;    // color
- int p;    // pitch
- int l;    // length
- int t;    // time
- int v;    // volume
- 
- Note(color c_, int p_, int l_, int t_, int v_){
-   c = c_;
-   p = p_;
-   l = l_;
-   t = t_;
-   v = v_;
- }
-
- void display(){
-   int time = millis()*1000;
-   if (time>t && time<(t+l)){
-     //int alpha = min((time-t)*255/500000, 255);  // fading function
-     //alpha = min(alpha, min(((t+l)-time)*255/500000, 255));
-     int alpha;
-     if (time>t && time<(t+l/2)){
-      alpha = min((time-t)*255/1, 255);  // fading function
-     }
-     else{
-       alpha = min(((t+l)-time)*255/1, 255);
-     }
-     
-     stroke(c, alpha);
-     fill(c, alpha);
-     rect(width/88.0*p-width/(88.0*2), height-width/172.0, width/88.0, width/88.0);
-   }
- }
-
 }
