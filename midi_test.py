@@ -3,9 +3,9 @@ import csv
 import mido
 from mido import MidiFile
 
-midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\for_elise_by_beethoven.mid'
+midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\Porz-Goret-Yann-Tiersen.mid'
 # midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\c-major-scale-on-treble-clef.mid'
-outputfilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\NoteFiles\furelise.csv'
+outputfilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\NoteFiles\porz_goret.csv'
 
 timestart_delay = 5
 
@@ -34,9 +34,15 @@ t2s = tempo*1e-6/tpb    # ticks to seconds conversion (ms/beat)(s/ms)(beat/tick)
 t2us = tempo/tpb    # ticks to micro seconds conversion
 notes = []
 basetime = timestart_delay
+channel = 0
 # separates note on and off signals into note volume, length, pitch, and time
 for n, msg in enumerate(note_msgs):     # iterate through all note messages
+
+    if msg.channel != channel:
+        basetime = timestart_delay
+        channel = msg.channel
     basetime += msg.time    # time that note starts in ticks
+
     if msg.type == 'note_on':   # if the msg is to turn note on
         note_l = 0  # note length
         for n_, msg_ in enumerate(note_msgs[n+1:], n+1):
@@ -47,16 +53,15 @@ for n, msg in enumerate(note_msgs):     # iterate through all note messages
                 notes.append({'pitch': note_p, 'volume': note_v, 'length': note_l, 'time': basetime})
                 break
 
+notes.sort(key=lambda k: k['time'])
 
 # write notes to a csv file
 with open(outputfilename, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     for note in notes:
-
         p = str(note['pitch'])
         v = str(note['volume'])
         l = str(int(note['length'] * t2us))
         t = str(int(note['time'] * t2us))
 
         writer.writerow([p, v, l, t])
-

@@ -23,7 +23,7 @@ class Note {
 
  void display(){
    int time = millis()*1000;
-   if (time>t && time<(t+l+fadetime)){
+   if (time>t && time<(t+l+fadetime) && l != 0){
      float alpha = 255;
      if (time>t && time<(t+l)){
       alpha = 255;

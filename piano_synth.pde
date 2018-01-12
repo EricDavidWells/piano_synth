@@ -1,7 +1,3 @@
-int plat_h;
-int plat_w;
-int plat_x;
-int plat_y;
 
 int tank_h;
 int tank_w; 
@@ -10,7 +6,7 @@ int tank_y;
 
 Note middle_c;
 String[] notes_str;
-String notefilename = "\\NoteFiles\\furelise.csv";
+String notefilename = "\\NoteFiles\\porzgoret.csv";
 ArrayList<Note> notes;
 ArrayList<Bullet> bullets;
 Gun gun;
@@ -22,18 +18,13 @@ int fadetime = 250000;
 void setup() {
  size(1000, 700);
  colorMode(HSB);
- 
- // create all platform shape parameters
- plat_h = height/20;
- plat_w = width/2;
- plat_x = width/2;
- plat_y = height-height/10;
+ rectMode(CENTER);  
  
  // create all tank shape parameters
  tank_h = height/30;
  tank_w = width/20;
- tank_x = width/2;
- tank_y = plat_y - plat_h/2 - tank_h/2;
+ tank_x = width/8;
+ tank_y = height*2/3;
  
  middle_c = new Note(255, 40, 10000000, 1000000, 5);
  
@@ -55,7 +46,7 @@ void setup() {
    Note note = new Note(c, pitch, len, time, volume);
    notes.add(note);
    
-   Bullet bullet = new Bullet(c, note.pos.x, note.pos.y, 10, (height-height/4), gun.pos, time);
+   Bullet bullet = new Bullet(c, note.pos.x, note.pos.y, width/100, (height*volume/127), gun.pos, time);
    bullets.add(bullet);
    
    
@@ -68,11 +59,6 @@ void setup() {
 
 void draw() {
   background(0);
-  
-  stroke(255);
-  fill(255);
-  rectMode(CENTER);
-  rect(plat_x, plat_y, plat_w, plat_h);
   
   gun.display();
   
