@@ -3,9 +3,9 @@ import csv
 import mido
 from mido import MidiFile
 
-midifilename = r'MidiFiles\Porz-Goret-Yann-Tiersen.mid'
+midifilename = r'piano_synth\data\MidiFiles\mozart_2pianos_1.mid'
 # midifilename = r'MidiFiles\fur_elise_by_beethoven.mid'
-outputfilename = r'NoteFiles\porz_goret.csv'
+outputfilename = r'piano_synth\data\NoteFiles\mozart_2pianos_1.csv'
 
 
 def music_track_index(mid):
@@ -33,7 +33,7 @@ type = mid.type     # midi file type (0, 1, or 2)
 total_length = mid.length   # time length in seconds
 tpb = mid.ticks_per_beat   # ticks per beat, tick is the smallest time unit
 notemax = 127
-outports = mido.get_output_names()   # gets available output port names
+# outports = mido.get_output_names()   # gets available output port names
 
 
 tempodict = []   # dictionary holding tempo change message information
@@ -72,7 +72,7 @@ for i, track in enumerate(mid.tracks):
 
         totaltick += msg.time    # increment the time that note starts in ticks
 
-        if msg.type == 'note_on':   # if message is a note_on message
+        if msg.type == 'note_on' and msg.velocity != 0:   # if message is a note_on message
             note_l = 0  # note length
             for j_, msg_ in enumerate(track[j + 1:], j + 1):    # find next instance of note to calc parameters
                 note_l += msg_.time
