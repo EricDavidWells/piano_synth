@@ -3,75 +3,88 @@ import csv
 import mido
 from mido import MidiFile
 
-# midifilename = r'MidiFiles\Porz-Goret-Yann-Tiersen.mid'
-midifilename = r'MidiFiles\fur_elise_by_beethoven.mid'
-outputfilename = r'NoteFiles\fur_elise.csv'
+midifilename = r'MidiFiles\Porz-Goret-Yann-Tiersen.mid'
+# midifilename = r'MidiFiles\fur_elise_by_beethoven.mid'
+outputfilename = r'NoteFiles\porz_goret.csv'
 
-timestart_delay = 5
+
+def music_track_index(mid):
+    """
+    finds the tracks in a midi file object that contain note messages
+
+    :param mid: MidiFile object
+    :return: list containing 0 if track contains no notes and 1 if it does
+    """
+    track_list = []
+
+    for i, track in enumerate(mid.tracks):
+        noteflag = 0
+        for msg in track:
+            if 'note' in msg.type:
+                noteflag = 1
+        track_list.append(noteflag)
+
+    return track_list
+
 
 # open a midi file
 mid = MidiFile(midifilename)
-
 type = mid.type     # midi file type (0, 1, or 2)
 total_length = mid.length   # time length in seconds
 tpb = mid.ticks_per_beat   # ticks per beat, tick is the smallest time unit
 notemax = 127
+outports = mido.get_output_names()   # gets available output port names
 
-# outports = mido.get_output_names()   # gets available output port names
 
-note_msgs = []
-tempodict = []   # in microseconds per beat
+tempodict = []   # dictionary holding tempo change message information
 tempoticktotal = 0
 timetotal = 0
+
+# check which tracks contain note messages
+notetracklist = music_track_index(mid)
+
+# get all tempo changes and store in tempo list of dictionaries
 for i, track in enumerate(mid.tracks):
     for j, msg in enumerate(track):
-        # print(msg)
+        print(msg)
         if msg.is_meta:
             if msg.type == 'set_tempo':
                 tempoticktotal += msg.time
-                timetotal += track[max(0, j-1)].time*msg.tempo/tpb
+                timetotal += msg.time * msg.tempo / tpb
                 tempodict.append({'tempo': msg.tempo, 'tick': tempoticktotal, 'time': timetotal})
-        if 'note' in msg.type:
-            note_msgs.append(msg)
 
-# for x in tempodict:
-#     print(x)
-
-
-# timemap = map(lambda x: x['tempodict']*x['time']/tpb)
-
-# t2s = tempo*1e-6/tpb    # ticks to seconds conversion (ms/beat)(s/ms)(beat/tick)(tick) = (s)
-# t2us = tempo/tpb    # ticks to micro seconds conversion
-
-notes = []
+notes = []  # list to store individual note dictionaries
 totaltick = 0
 totaltime = 0
 channel = 0
-# separates note on and off signals into note volume, length, pitch, and time
-for n, msg in enumerate(note_msgs):     # iterate through all note messages
-    # print(msg)
-    if msg.channel != channel:
-        totaltick = 0
-        channel = msg.channel
 
-    totaltick += msg.time    # time that note starts in ticks
+# get all note messages and timing (in ticks) into the note list of dictionaries
+for i, track in enumerate(mid.tracks):
+    if notetracklist[i] == 0:   # skip track if it contains no note messages
+        continue
 
-    if msg.type == 'note_on':   # if the msg is to turn note on
-        note_l = 0  # note length
-        for n_, msg_ in enumerate(note_msgs[n+1:], n+1):
-            note_l += msg_.time
+    for j, msg in enumerate(track):
+        if msg.is_meta:     # skip message if it is a meta message
+            continue
+        if msg.channel != channel:      # reset timer if the channel changes
+            totaltick = 0
+            channel = msg.channel
 
-            if msg_.note == msg.note and 'note' in msg_.type:
-                note_p = msg.note   # note pitch
-                note_v = msg.velocity   # note volume
-                notes.append({'pitch': note_p, 'volume': note_v, 'length': note_l, 'tick': totaltick})
-                break
+        totaltick += msg.time    # increment the time that note starts in ticks
 
-notes.sort(key=lambda k: k['tick'])
+        if msg.type == 'note_on':   # if message is a note_on message
+            note_l = 0  # note length
+            for j_, msg_ in enumerate(track[j + 1:], j + 1):    # find next instance of note to calc parameters
+                note_l += msg_.time
+                if 'note' in msg_.type and msg_.note == msg.note:
+                    note_p = msg.note  # note pitch
+                    note_v = msg.velocity  # note volume
+                    notes.append({'pitch': note_p, 'volume': note_v, 'length': note_l, 'tick': totaltick})
+                    break
 
-# for x in notes:
-    # print(x)
+notes.sort(key=lambda k: k['tick'])     # sort notes just in case they are not in order
 
+print(notes[-1]['tick'])
 # write notes to a csv file
 with open(outputfilename, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
@@ -98,3 +111,5 @@ with open(outputfilename, 'w', newline='') as csvfile:
         t = str(notetime_1)
 
         writer.writerow([p, v, l, t])
+
+# exec(open("piano_synth.pde").read(), globals())

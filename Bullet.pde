@@ -33,7 +33,7 @@ class Bullet {
     vel = new PVector(vx, -v1);
     
     fire_time = hit_t - int(t*1e6);
-    prev_time = fire_time; //<>//
+    prev_time = fire_time; //<>// //<>//
  }
  
  void display(){
