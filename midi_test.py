@@ -20,37 +20,50 @@ notemax = 127
 # outports = mido.get_output_names()   # gets available output port names
 
 note_msgs = []
-tempo = 0   # in microseconds per beat
+tempodict = []   # in microseconds per beat
+tempoticktotal = 0
+timetotal = 0
 for i, track in enumerate(mid.tracks):
-    for msg in track:
-        print(msg)
+    for j, msg in enumerate(track):
         if msg.is_meta:
             if msg.type == 'set_tempo':
-                tempo = msg.tempo
+                tempoticktotal += msg.time
+                timetotal += msg.time[max(0, j-1)]*msg.tempo/tpb
+                tempodict.append({'tempo': msg.tempo, 'tick': tempoticktotal, 'time': timetotal})
         if 'note' in msg.type:
             note_msgs.append(msg)
 
-t2s = tempo*1e-6/tpb    # ticks to seconds conversion (ms/beat)(s/ms)(beat/tick)(tick) = (s)
-t2us = tempo/tpb    # ticks to micro seconds conversion
+for x in tempodict:
+    print(x)
+
+
+# timemap = map(lambda x: x['tempodict']*x['time']/tpb)
+
+# t2s = tempo*1e-6/tpb    # ticks to seconds conversion (ms/beat)(s/ms)(beat/tick)(tick) = (s)
+# t2us = tempo/tpb    # ticks to micro seconds conversion
+
 notes = []
-basetime = timestart_delay
+totaltick = 0
+totaltime = 0
 channel = 0
 # separates note on and off signals into note volume, length, pitch, and time
 for n, msg in enumerate(note_msgs):     # iterate through all note messages
 
     if msg.channel != channel:
-        basetime = timestart_delay
+        totaltick = 0
         channel = msg.channel
-    basetime += msg.time    # time that note starts in ticks
+
+    totaltick += msg.time    # time that note starts in ticks
 
     if msg.type == 'note_on':   # if the msg is to turn note on
         note_l = 0  # note length
         for n_, msg_ in enumerate(note_msgs[n+1:], n+1):
             note_l += msg_.time
+
             if msg_.note == msg.note and 'note' in msg_.type:
                 note_p = msg.note   # note pitch
                 note_v = msg.velocity   # note volume
-                notes.append({'pitch': note_p, 'volume': note_v, 'length': note_l, 'time': basetime})
+                notes.append({'pitch': note_p, 'volume': note_v, 'length': note_l, 'time': totaltick})
                 break
 
 notes.sort(key=lambda k: k['time'])
@@ -61,7 +74,24 @@ with open(outputfilename, 'w', newline='') as csvfile:
     for note in notes:
         p = str(note['pitch'])
         v = str(note['volume'])
-        l = str(int(note['length'] * t2us))
-        t = str(int(note['time'] * t2us))
+
+        index_1 = max([i for i, x in enumerate(tempodict) if x['tick'] < note['tick']])
+        index_2 = max([i for i, x in enumerate(tempodict) if x['tick'] < note['tick'] + note['length']])
+
+        if index_1 != index_2:
+            ticks_1 = tempodict[index_1+1]['tick'] - note['tick']
+            ticks_2 = note['tick'] + note['length'] - tempodict[index_2]['tick']
+
+            time_1 = ticks_1 * tempodict[index_1]['tempo']
+            time_2 = ticks_2 * tempodict[index_2['tempo']]
+
+            start_time = tempodict[index_1 + 1]['time'] - time_1
+            end_time = tempodict[index_2]['time'] + time_2
+
+        else:
+            start_time =
+
+        l = str(int(note['length']))
+        t = str(int(note['time']))
 
         writer.writerow([p, v, l, t])

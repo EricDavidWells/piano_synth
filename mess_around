@@ -1,13 +1,36 @@
 
-string = 'note_off channel=0 note=48 velocity=95 time=240'
+import bisect
 
-string2 = string.split()
-# print(string2)
+value1 = 205
+value2 = 455
 
-for pos, string in enumerate(string2):
-    string = string.replace('_', '=')
-    string2[pos] = string.split('=')
-    print(string)
+a = [{'time': 100}, {'time': 200}, {'time': 200}, {'time': 400}, {'time': 450}]
+b = [x['time'] for x in a]
+# c = [x for x in b if x < value1]
+index1 = max([i for i, x in enumerate(b) if x < value1])
+index2 = max([i for i, x in enumerate(a) if x['time'] < value2])
+
+if index1 != index2:
+    ticks_1 = a[index1 + 1]['time'] - value1
+    ticks_2 = (value2 - a[index2]['time'])
+    print(ticks_1)
+    print(ticks_2)
+
+# print(a)
+# print(b)
+# print(c)
+print(index1)
+print(index2)
+
+# string = 'note_off channel=0 note=48 velocity=95 time=240'
+#
+# string2 = string.split()
+# # print(string2)
+#
+# for pos, string in enumerate(string2):
+#     string = string.replace('_', '=')
+#     string2[pos] = string.split('=')
+#     print(string)
 
 # print(string2)
 
