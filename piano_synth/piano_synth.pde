@@ -23,7 +23,7 @@ ArrayList<Bullet> bullets;
 Gun gun;
 
 int minlength = 0;
-int fadetime = 125000;
+int fadetime = 50000;
 int introtime = 5000000;
 int soundoffset = 250000;
 
@@ -65,6 +65,7 @@ void setup() {
  // load all notes into arraylist as objects
  notes = new ArrayList<Note>();
  notes_str = loadStrings(dataPath("") + notefilename);
+ int lenmax =0;
  for (int i = 0 ; i < notes_str.length; i++) {
    
    color c = color(0, 0, 0);  // set color to 0,0,0 to enable rainbow colors
@@ -72,6 +73,7 @@ void setup() {
    int pitch = int(line[0])-20;  // split line into components
    int volume = int(line[1]);
    int len = max(int(line[2]), minlength);
+   lenmax = max(len, lenmax);
    int time = int(line[3])+introtime;
    Note note = new Note(c, pitch, len, time, volume);
    notes.add(note);
@@ -82,7 +84,7 @@ void setup() {
    maxvolume = max(maxvolume, volume);
    minvolume = min(minvolume, volume);
  }
-  
+  print(lenmax);
  for (int i = 0; i<notes.size(); i++){
    Note note = notes.get(i);
    Bullet bullet = new Bullet(note.c, note.pos.x, note.pos.y, width/100, (height*(note.v-minvolume)/(maxvolume-minvolume)), gun.pos, note.t);
@@ -130,4 +132,8 @@ void draw() {
 
 long micros(){
   return System.nanoTime()/1000;
+}
+
+void keypressed(){
+  
 }
