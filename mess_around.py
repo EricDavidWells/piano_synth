@@ -1,20 +1,20 @@
 
 import bisect
 
-value1 = 205
-value2 = 455
+note_tick1 = 205
+note_tick2 = 455
 
-a = [{'time': 100}, {'time': 200}, {'time': 200}, {'time': 400}, {'time': 450}]
-b = [x['time'] for x in a]
+tempodict = [{'tick': 100}, {'tick': 200}, {'tick': 200}, {'tick': 400}, {'tick': 450}]
+b = [x['tick'] for x in tempodict]
 # c = [x for x in b if x < value1]
-index1 = max([i for i, x in enumerate(b) if x < value1])
-index2 = max([i for i, x in enumerate(a) if x['time'] < value2])
+
+index1 = max([i for i, x in enumerate(b) if x < note_tick1])
+index2 = max([i for i, x in enumerate(tempodict) if x['tick'] < note_tick2])
+
+tempo_tk1 = tempodict[index1]['tick']
+tempo_tk3 = tempodict[index2]['tick']
 
 if index1 != index2:
-    ticks_1 = a[index1 + 1]['time'] - value1
-    ticks_2 = (value2 - a[index2]['time'])
-    print(ticks_1)
-    print(ticks_2)
 
 # print(a)
 # print(b)

@@ -6,7 +6,7 @@ int tank_y;
 
 Note middle_c;
 String[] notes_str;
-String notefilename = "\\NoteFiles\\porzgoret.csv";
+String notefilename = "\\NoteFiles\\furelise.csv";
 ArrayList<Note> notes;
 ArrayList<Bullet> bullets;
 Gun gun;

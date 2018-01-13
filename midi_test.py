@@ -3,9 +3,9 @@ import csv
 import mido
 from mido import MidiFile
 
-midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\Porz-Goret-Yann-Tiersen.mid'
-# midifilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\MidiFiles\c-major-scale-on-treble-clef.mid'
-outputfilename = r'C:\Users\bwcon\Documents\Processing Projects\piano_synth\NoteFiles\porz_goret.csv'
+# midifilename = r'MidiFiles\Porz-Goret-Yann-Tiersen.mid'
+midifilename = r'MidiFiles\fur_elise_by_beethoven.mid'
+outputfilename = r'NoteFiles\fur_elise.csv'
 
 timestart_delay = 5
 
@@ -25,16 +25,17 @@ tempoticktotal = 0
 timetotal = 0
 for i, track in enumerate(mid.tracks):
     for j, msg in enumerate(track):
+        # print(msg)
         if msg.is_meta:
             if msg.type == 'set_tempo':
                 tempoticktotal += msg.time
-                timetotal += msg.time[max(0, j-1)]*msg.tempo/tpb
+                timetotal += track[max(0, j-1)].time*msg.tempo/tpb
                 tempodict.append({'tempo': msg.tempo, 'tick': tempoticktotal, 'time': timetotal})
         if 'note' in msg.type:
             note_msgs.append(msg)
 
-for x in tempodict:
-    print(x)
+# for x in tempodict:
+#     print(x)
 
 
 # timemap = map(lambda x: x['tempodict']*x['time']/tpb)
@@ -48,7 +49,7 @@ totaltime = 0
 channel = 0
 # separates note on and off signals into note volume, length, pitch, and time
 for n, msg in enumerate(note_msgs):     # iterate through all note messages
-
+    # print(msg)
     if msg.channel != channel:
         totaltick = 0
         channel = msg.channel
@@ -63,10 +64,13 @@ for n, msg in enumerate(note_msgs):     # iterate through all note messages
             if msg_.note == msg.note and 'note' in msg_.type:
                 note_p = msg.note   # note pitch
                 note_v = msg.velocity   # note volume
-                notes.append({'pitch': note_p, 'volume': note_v, 'length': note_l, 'time': totaltick})
+                notes.append({'pitch': note_p, 'volume': note_v, 'length': note_l, 'tick': totaltick})
                 break
 
-notes.sort(key=lambda k: k['time'])
+notes.sort(key=lambda k: k['tick'])
+
+# for x in notes:
+    # print(x)
 
 # write notes to a csv file
 with open(outputfilename, 'w', newline='') as csvfile:
@@ -75,23 +79,22 @@ with open(outputfilename, 'w', newline='') as csvfile:
         p = str(note['pitch'])
         v = str(note['volume'])
 
-        index_1 = max([i for i, x in enumerate(tempodict) if x['tick'] < note['tick']])
-        index_2 = max([i for i, x in enumerate(tempodict) if x['tick'] < note['tick'] + note['length']])
+        index_1 = max([i for i, x in enumerate(tempodict) if x['tick'] <= note['tick']])
+        index_2 = max([i for i, x in enumerate(tempodict) if x['tick'] <= note['tick'] + note['length']])
 
-        if index_1 != index_2:
-            ticks_1 = tempodict[index_1+1]['tick'] - note['tick']
-            ticks_2 = note['tick'] + note['length'] - tempodict[index_2]['tick']
+        tempotick_1 = tempodict[index_1]['tick']
+        tempotick_2 = tempodict[index_2]['tick']
 
-            time_1 = ticks_1 * tempodict[index_1]['tempo']
-            time_2 = ticks_2 * tempodict[index_2['tempo']]
+        tempotime_1 = tempodict[index_1]['time']
+        tempotime_2 = tempodict[index_2]['time']
 
-            start_time = tempodict[index_1 + 1]['time'] - time_1
-            end_time = tempodict[index_2]['time'] + time_2
+        tempo_1 = tempodict[index_1]['tempo']
+        tempo_2 = tempodict[index_2]['tempo']
 
-        else:
-            start_time =
+        notetime_1 = tempotime_1 + (note['tick']-tempotick_1)*(tempo_1/tpb)
+        notetime_2 = tempotime_2 + (note['tick'] + note['length'] - tempotick_2)*(tempo_2/tpb)
 
-        l = str(int(note['length']))
-        t = str(int(note['time']))
+        l = str(notetime_2-notetime_1)
+        t = str(notetime_1)
 
         writer.writerow([p, v, l, t])
