@@ -16,8 +16,10 @@ int tank_y;
 
 Note middle_c;
 String[] notes_str;
-String notefilename = "\\NoteFiles\\mozart_2pianos_1.csv";
-String midifilename = "\\MidiFiles\\mozart_2pianos_1.mid";
+String notefilename = "\\NoteFiles\\fur_elise.csv";
+String midifilename = "\\MidiFiles\\fur_elise.mid";
+//String notefilename = "\\NoteFiles\\pianoguys_allofme.csv";
+//String midifilename = "\\MidiFiles\\pianoguys_allofme.mid";
 ArrayList<Note> notes;
 ArrayList<Bullet> bullets;
 Gun gun;

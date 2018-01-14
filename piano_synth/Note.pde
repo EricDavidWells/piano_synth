@@ -23,7 +23,7 @@ class Note {
 
  void display(){
    int time = millis()*1000;
-   if (time>t && time<(t+l+fadetime) && l != 0){
+   if (time>t && time<(t+l) && l != 0){
      float alpha = 255;
      if (time>t && time<(t+l)){
       alpha = 255;
@@ -31,7 +31,7 @@ class Note {
      else if (time>(t+l) && time<(t+l+fadetime)){
        alpha = (1.0-(time-(t+l))*1.00/fadetime)*255.00;
      }
-
+    alpha = (1.0-(time-t)*1.0/l)*255.0;
      stroke(c, alpha);
      fill(c, alpha);
      rect(pos.x, pos.y, w, h);
