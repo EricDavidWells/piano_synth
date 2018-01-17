@@ -34,7 +34,8 @@ class Note {
     alpha = (1.0-(time-t)*1.0/l)*255.0;
      noStroke();
      fill(c, alpha);
-     rect(pos.x, pos.y, w, h);
+     //rect(pos.x, pos.y, w, h);
+     rect(pos.x, pos.y, w, v/127.0*width/10.0*(alpha/255.0));
    }
  }
 

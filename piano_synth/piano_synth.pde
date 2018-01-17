@@ -7,7 +7,7 @@ boolean midiplayerflag = false;
 boolean midistartflag = false;
 
 PImage bg;
-String bgfilename = "\\Pictures\\sunset_1.jpeg";
+String bgfilename = "\\Pictures\\pink_sunset_1.jpg";
 PImage gun_pic;
 String gunfilename = "\\Pictures\\rainbow_circle_2.png";
 
@@ -18,10 +18,10 @@ int tank_y;
 
 Note middle_c;
 String[] notes_str;
-//String notefilename = "\\NoteFiles\\fur_elise.csv";
-//String midifilename = "\\MidiFiles\\fur_elise.mid";
-String notefilename = "\\NoteFiles\\porz_goret.csv";
-String midifilename = "\\MidiFiles\\porz_goret.mid";
+String notefilename = "\\NoteFiles\\fur_elise.csv";
+String midifilename = "\\MidiFiles\\fur_elise.mid";
+//String notefilename = "\\NoteFiles\\porz_goret.csv";
+//String midifilename = "\\MidiFiles\\porz_goret.mid";
 ArrayList<Note> notes;
 ArrayList<Bullet> bullets;
 Gun gun;
