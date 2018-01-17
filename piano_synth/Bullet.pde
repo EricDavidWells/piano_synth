@@ -37,16 +37,19 @@ class Bullet {
  }
  
  void display(){
-   int brightness = int(((millis()*1000-fire_time)*1.0/(hit_t-fire_time)*2)*255);
-   float hue = hue(c);
-   float sat = saturation(c);
-   stroke(hue, sat, brightness);
-   fill(hue, sat, brightness); //<>//
-   ellipse(pos.x, pos.y, r, r);
+   int time = millis()*1000;
+   if (time > fire_time && time < hit_t){
+     int brightness = int(((time-fire_time)*1.0/(hit_t-fire_time)*2)*255);
+     float hue = hue(c);
+     float sat = saturation(c);
+     stroke(hue, sat, brightness);
+     fill(hue, sat, brightness); //<>//
+     ellipse(pos.x, pos.y, r, r);
+     drive(time);
+   }
  }
  
- void drive(){
-   int time = millis()*1000;
+ void drive(int time){
    vel.y += g*(time-prev_time)/1e6;
    pos.x += vel.x*(time-prev_time)/1e6;
    pos.y += vel.y*(time-prev_time)/1e6;

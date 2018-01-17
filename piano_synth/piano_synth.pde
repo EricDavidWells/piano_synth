@@ -1,4 +1,4 @@
-import javax.sound.midi.*;
+import javax.sound.midi.*;  // packages for playing midi files
 import java.io.*;
 Sequencer midiplayer;
 File midifile;
@@ -11,10 +11,10 @@ String bgfilename = "\\Pictures\\pink_sunset_1.jpg";
 PImage gun_pic;
 String gunfilename = "\\Pictures\\rainbow_circle_2.png";
 
-int tank_h;
-int tank_w; 
-int tank_x;
-int tank_y;
+int gun_h;
+int gun_w; 
+int gun_x;
+int gun_y;
 
 Note middle_c;
 String[] notes_str;
@@ -28,62 +28,69 @@ Gun gun;
 
 int minlength = 0;
 int fadetime = 50000;
-int introtime = 5000000;
+int introtime = 8000000;
 int soundoffset = 450000;
 
 int maxvolume = 0;
 int minvolume = 127;
+int maxkey = 0;
+int minkey = 88;
 
 void setup() {
   
- size(1600, 900);
+ size(1000, 600);
  colorMode(HSB);
- rectMode(CENTER);  
+ 
+ rectMode(CENTER);  // change rectangle display mode for coordinates to be at center
+ 
+ // load background image and resize to fit screen
  bg = loadImage(dataPath("") + bgfilename);
  bg.resize(width, height);
+ 
+ // load gun image and resize
  gun_pic = loadImage(dataPath("") + gunfilename);
- gun_pic.resize(30, 30);
+ gun_pic.resize(width/30, width/30);
  
- // create all tank shape parameters
- tank_h = height/30;
- tank_w = width/20;
- tank_x = width/2;
- tank_y = height*3/4;
- 
- gun = new Gun(color(255), tank_x, tank_y, tank_w, tank_h, gun_pic);
+ // create all gun shape parameters
+ gun_h = height/30;
+ gun_w = width/20;
+ gun_x = width/2;
+ gun_y = height*3/4;
+ gun = new Gun(color(255), gun_x, gun_y, gun_w, gun_h, gun_pic);  // create gun object
  
  bullets = new ArrayList<Bullet>();
- 
- // load all notes into arraylist as objects
  notes = new ArrayList<Note>();
- notes_str = loadStrings(dataPath("") + notefilename);
- int lenmax =0;
+ 
+ notes_str = loadStrings(dataPath("") + notefilename);  // load all lines of the data file
+ 
+ // create note object from each line and gather information about song
  for (int i = 0 ; i < notes_str.length; i++) {
-   
    color c = color(0, 0, 0);  // set color to 0,0,0 to enable rainbow colors
-   String[] line = split(notes_str[i], ',');  // take single line
-   int pitch = int(line[0])-20;  // split line into components
-   int volume = int(line[1]);
-   int len = max(int(line[2]), minlength);
-   lenmax = max(len, lenmax);
-   int time = int(line[3])+introtime;
+   String[] line = split(notes_str[i], ',');
+   int pitch = int(line[0])-20;  // minus 20 to move midi (0-127) pitch to piano pitch (0-88)
+   int volume = int(line[1]);  // volume on scale from (0-127)
+   int len = max(int(line[2]), minlength);  // note sustain time in microseconds
+   int time = int(line[3])+introtime;  // note start time in microseconds
    Note note = new Note(c, pitch, len, time, volume);
    notes.add(note);
    
+   // obtain information from song
    maxvolume = max(maxvolume, volume);
    minvolume = min(minvolume, volume);
+   maxkey = max(maxkey, pitch);
+   minkey = min(minkey, pitch);
  }
  for (int i = 0; i<notes.size(); i++){
    Note note = notes.get(i);
-   Bullet bullet = new Bullet(note.c, note.pos.x, note.pos.y, width/100, (height*1.0*(note.v-minvolume)*1.0/(maxvolume-minvolume)), gun.pos, note.t);
+   int bullet_w = width/100;
+   float bullet_h = (height*1.0*(note.v-minvolume)*1.0/(maxvolume-minvolume));
+   Bullet bullet = new Bullet(note.c, note.pos.x, note.pos.y, bullet_w, bullet_h, gun.pos, note.t);
    bullets.add(bullet);
  }
-
 }
 
-void draw() {
-  background(bg);
-  
+void draw() { 
+  // start the midi file at what is hopefully the right time
   if (midiplayerflag == false){
     midiplayerflag = true;
     try {
@@ -103,24 +110,18 @@ void draw() {
     midiplayer.start();
   }
   
+  background(bg);
   gun.display();
   
+  // display every note and every bullet
   for (int i = 0; i<notes.size(); i++){
     Note note = notes.get(i);
     note.display();
-    
     Bullet bullet = bullets.get(i);
-    if (millis()*1000 > bullet.fire_time && millis()*1000 < bullet.hit_t){
-      bullet.drive();
-      bullet.display();
-    }
+    bullet.display();
   }
 }
 
 long micros(){
   return System.nanoTime()/1000;
-}
-
-void keypressed(){
-  
 }
