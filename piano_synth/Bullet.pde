@@ -37,8 +37,11 @@ class Bullet {
  }
  
  void display(){
-   stroke(c);
-   fill(c);
+   int brightness = int(((millis()*1000-fire_time)*1.0/(hit_t-fire_time)*2)*255);
+   float hue = hue(c);
+   float sat = saturation(c);
+   stroke(hue, sat, brightness);
+   fill(hue, sat, brightness); //<>//
    ellipse(pos.x, pos.y, r, r);
  }
  
