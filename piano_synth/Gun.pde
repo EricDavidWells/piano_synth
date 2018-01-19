@@ -18,8 +18,6 @@ class Gun {
  void display(){
   stroke(c);
   fill(c);
-  //rect(pos.x, pos.y, w, h);
-  imageMode(CENTER);
   image(img, pos.x, pos.y);
  }
 }

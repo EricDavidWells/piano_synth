@@ -1,21 +1,25 @@
 class Note {
  
  PVector pos;
- float h = width/88;  // height
- float w = width/88;  // width
+ float h;  // height
+ float w;  // width
  color c;    // color
  int p;    // pitch
  int l;    // length
  int t;    // time
  int v;    // volume
  
- Note(color c_, int p_, int l_, int t_, int v_){
+ Note(color c_, int p_, int l_, int t_, int v_, PVector pos_, int w_, int h_){
    c = c_;
    p = p_;
    l = l_;
    t = t_;
    v = v_;
-   pos = new PVector(width/88.0*p-width/(88.0*2), height-width/172.0);
+   pos = pos_;
+   h = h_;
+   w = w_;
+   
+   // adjust color to rainbow based on position
    if (c == color(0, 0, 0)){
      c = color(p_*255/88, 255, 255);
    }
@@ -32,12 +36,10 @@ class Note {
        alpha = (1.0-(time-(t+l))*1.00/fadetime)*255.00;
      }
     alpha = (1.0-(time-t)*1.0/l)*255.0;
-     //noStroke();
      strokeWeight(1);
-     stroke(100, 100, 100);
+     stroke(100, 100, 100, alpha);
      fill(c, alpha);  
-     //rect(pos.x, pos.y, w, h);
-     rect(pos.x, pos.y, w, v/127.0*width/10.0*(alpha/255.0));
+     rect(pos.x, pos.y, w, max(v/127.0*width/10.0*(alpha/255.0), int(h)));
    }
  }
 
