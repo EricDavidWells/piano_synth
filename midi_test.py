@@ -3,9 +3,9 @@ import csv
 import mido
 from mido import MidiFile
 
-midifilename = r'piano_synth\data\MidiFiles\fur_elise.mid'
+midifilename = r'piano_synth\data\MidiFiles\moonlight_part_3.mid'
 # midifilename = r'MidiFiles\fur_elise_by_beethoven.mid'
-outputfilename = r'piano_synth\data\NoteFiles\fur_elise.csv'
+outputfilename = r'piano_synth\data\NoteFiles\moonlight_part_3.csv'
 
 
 def music_track_index(mid):
@@ -43,14 +43,20 @@ timetotal = 0
 # check which tracks contain note messages
 notetracklist = music_track_index(mid)
 
+current_tempo = 0
 # get all tempo changes and store in tempo list of dictionaries
 for i, track in enumerate(mid.tracks):
     for j, msg in enumerate(track):
         print(msg)
+        tempoticktotal += msg.time
+        timetotal += msg.time * current_tempo / tpb
         if msg.is_meta:
+            # print(msg)
             if msg.type == 'set_tempo':
-                tempoticktotal += msg.time
-                timetotal += msg.time * msg.tempo / tpb
+                # print(msg)
+                current_tempo = msg.tempo
+                # tempoticktotal += msg.time
+                # timetotal += msg.time * msg.tempo / tpb
                 tempodict.append({'tempo': msg.tempo, 'tick': tempoticktotal, 'time': timetotal})
 
 notes = []  # list to store individual note dictionaries
@@ -64,13 +70,14 @@ for i, track in enumerate(mid.tracks):
         continue
 
     for j, msg in enumerate(track):
+
+        totaltick += msg.time  # increment the time that note starts in ticks
+
         if msg.is_meta:     # skip message if it is a meta message
             continue
         if msg.channel != channel:      # reset timer if the channel changes
             totaltick = 0
             channel = msg.channel
-
-        totaltick += msg.time    # increment the time that note starts in ticks
 
         if msg.type == 'note_on' and msg.velocity != 0:   # if message is a note_on message
             note_l = 0  # note length
