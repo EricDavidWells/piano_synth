@@ -3,9 +3,9 @@ import csv
 import mido
 from mido import MidiFile
 
-midifilename = r'piano_synth\data\MidiFiles\moonlight_part_3.mid'
+midifilename = r'piano_synth\data\MidiFiles\moonlight_part3.mid'
 # midifilename = r'MidiFiles\fur_elise_by_beethoven.mid'
-outputfilename = r'piano_synth\data\NoteFiles\moonlight_part_3.csv'
+outputfilename = r'piano_synth\data\NoteFiles\moonlight_part3.csv'
 
 
 def music_track_index(mid):
