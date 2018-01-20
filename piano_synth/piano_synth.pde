@@ -7,9 +7,9 @@ boolean midiplayerflag = false;
 boolean midistartflag = false;
 
 PImage bg;
-String bgfilename = "\\Pictures\\red_blue_sunset.jpg";
+String bgfilename = "\\Pictures\\cloud_1.jpg";
 PImage gun_pic;
-String gunfilename = "\\Pictures\\rainbow_circle_2.png";
+String gunfilename = "\\Pictures\\rainbow_circle_3.png";
 
 int gun_h;
 int gun_w; 
@@ -20,13 +20,15 @@ Note middle_c;
 String[] notes_str;
 //String notefilename = "\\NoteFiles\\fur_elise.csv";
 //String midifilename = "\\MidiFiles\\fur_elise.mid";
-String notefilename = "\\NoteFiles\\porz_goret.csv";
-String midifilename = "\\MidiFiles\\porz_goret.mid";
+//String notefilename = "\\NoteFiles\\porz_goret.csv";
+//String midifilename = "\\MidiFiles\\porz_goret.mid";
+String notefilename = "\\NoteFiles\\mozart_2pianos_1.csv";
+String midifilename = "\\MidiFiles\\mozart_2pianos_1.mid";
 ArrayList<Note> notes;
 ArrayList<Bullet> bullets;
 Gun gun;
 
-int minlength = 0;
+int minlength = 250000;
 int fadetime = 50000;
 int introtime = 8000000;
 int soundoffset = 450000;
@@ -49,7 +51,7 @@ void setup() {
  
  // load gun image and resize
  gun_pic = loadImage(dataPath("") + gunfilename);
- gun_pic.resize(width/30, width/30);
+ gun_pic.resize(width/40, width/40);
  
  // create all gun shape parameters
  gun_h = height/30;

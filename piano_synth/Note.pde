@@ -36,10 +36,11 @@ class Note {
        alpha = (1.0-(time-(t+l))*1.00/fadetime)*255.00;
      }
     alpha = (1.0-(time-t)*1.0/l)*255.0;
-     strokeWeight(1);
-     stroke(100, 100, 100, alpha);
+     //strokeWeight(1);
+     //stroke(100, 100, 100, alpha);
+     noStroke();
      fill(c, alpha);  
-     rect(pos.x, pos.y, w, max(v/127.0*width/10.0*(alpha/255.0), int(h)));
+     rect(pos.x, pos.y, w, max((v-minvolume)*1.0/(maxvolume-minvolume)*width/5.0*(alpha/255.0), int(h)));
    }
  }
 
