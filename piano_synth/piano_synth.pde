@@ -46,6 +46,7 @@ void setup() {
  colorMode(HSB);
  imageMode(CENTER);
  rectMode(CENTER);  // change rectangle display mode for coordinates to be at center
+ frameRate(60);
  
  // load background image and resize to fit screen
  bg = loadImage(dataPath("") + bgfilename);
@@ -133,6 +134,8 @@ void draw() {
     Bullet bullet = bullets.get(i);
     bullet.display();
   }
+  
+  saveFrame(dataPath("") + "\\Frames\\Mozart_Moonlight_Part3\\#####"  + ".tga");
 }
 
 long micros(){
