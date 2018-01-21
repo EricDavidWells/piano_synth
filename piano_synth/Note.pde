@@ -40,7 +40,7 @@ class Note {
      //stroke(100, 100, 100, alpha);
      noStroke();
      fill(c, alpha);  
-     rect(pos.x, pos.y, w, max((v-minvolume)*1.0/(maxvolume-minvolume)*width/5.0*(alpha/255.0), int(h)));
+     rect(pos.x, pos.y, w, max((v-minvolume)*1.0/(maxvolume-minvolume)*width/3.0*(alpha/255.0), int(h)));
    }
  }
 

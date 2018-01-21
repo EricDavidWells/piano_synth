@@ -6,6 +6,7 @@ class Gun {
  float h;
  float g = 9.81;
  PImage img;
+ float v = 0;
  
  Gun(color c_, float xpos, float ypos, float w_, float h_, PImage img_){
    c = c_;
