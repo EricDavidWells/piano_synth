@@ -32,7 +32,7 @@ Gun gun;
 
 int minlength = 250000;
 int fadetime = 50000;
-int introtime = 8000000;
+int introtime = 5000000;
 int soundoffset = 450000;
 
 int maxvolume = 0;
@@ -40,9 +40,15 @@ int minvolume = 127;
 int maxkey = 0;
 int minkey = 88;
 
+boolean soundmode = false;
+boolean rendermode = true;
+int renderdelay = 0;
+int renderprev = 0;
+int savecount = 0;
+
 void setup() {
   
- size(1000, 600);
+ size(1280, 720);
  colorMode(HSB);
  imageMode(CENTER);
  rectMode(CENTER);  // change rectangle display mode for coordinates to be at center
@@ -106,6 +112,7 @@ void setup() {
 
 void draw() { 
   // start the midi file at what is hopefully the right time
+  if (soundmode == true){
   if (midiplayerflag == false){
     midiplayerflag = true;
     try {
@@ -123,7 +130,7 @@ void draw() {
     midistartflag = true;
     midiplayer.start();
   }
-  
+}
   background(bg);
   gun.display();
   
@@ -135,7 +142,20 @@ void draw() {
     bullet.display();
   }
   
-  saveFrame(dataPath("") + "\\Frames\\Mozart_Moonlight_Part3\\#####"  + ".tga");
+  if (rendermode == true && millis()*1000 - renderdelay - renderprev > (1000000.0/60)){
+    //if (rendermode == true){
+      println(millis()*1000 - renderdelay - renderprev);
+    savecount += 1;
+    long tic = System.nanoTime();
+    //saveFrame(dataPath("") + String.format("\\Frames\\Mozart_Moonlight_Part3\\%06d", savecount) + ".png");
+    saveFrame(String.format("E:\\eric_temp\\%06d", savecount) + ".tga");
+    long toc = System.nanoTime() - tic;
+    renderdelay += toc/1000.0;
+    renderprev = millis()*1000 - renderdelay;
+    
+    
+    }
+  
 }
 
 long micros(){

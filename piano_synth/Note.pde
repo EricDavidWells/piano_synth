@@ -26,7 +26,7 @@ class Note {
  }
 
  void display(){
-   int time = millis()*1000;
+   int time = millis()*1000 - renderdelay;
    if (time>t && time<(t+l) && l != 0){
      float alpha = 255;
      if (time>t && time<(t+l)){
