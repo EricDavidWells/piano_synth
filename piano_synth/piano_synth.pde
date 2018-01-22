@@ -33,18 +33,23 @@ Gun gun;
 int minlength = 250000;
 int fadetime = 50000;
 int introtime = 5000000;
+int outrotime = 5000000;
 int soundoffset = 450000;
 
 int maxvolume = 0;
 int minvolume = 127;
 int maxkey = 0;
 int minkey = 88;
+int maxtime = 0;
 
 boolean soundmode = false;
 boolean rendermode = true;
+boolean framemode = true;
 int renderdelay = 0;
 int renderprev = 0;
 int savecount = 0;
+int fps = 60;
+int time = 0;
 
 void setup() {
   
@@ -80,10 +85,12 @@ void setup() {
    String[] line = split(notes_str[i], ',');
    int pitch = int(line[0])-20;  // minus 20 to move midi (0-127) pitch to piano pitch (0-88)
    int volume = int(line[1]);  // volume on scale from (0-127)
+   int time_ = int(line[3])+introtime;  // note start time in microseconds
    maxvolume = max(maxvolume, volume);
    minvolume = min(minvolume, volume);
    maxkey = max(maxkey, pitch);
    minkey = min(minkey, pitch);
+   maxtime = max(maxtime, time_);
  }
 
  // create note object from each line and gather information about song
@@ -93,11 +100,11 @@ void setup() {
    int pitch = int(line[0])-20;  // minus 20 to move midi (0-127) pitch to piano pitch (0-88)
    int volume = int(line[1]);  // volume on scale from (0-127)
    int len = max(int(line[2]), minlength);  // note sustain time in microseconds
-   int time = int(line[3])+introtime;  // note start time in microseconds
+   int time_ = int(line[3])+introtime;  // note start time in microseconds
    PVector position = new PVector(width*1.0/(maxkey-minkey+10)*(pitch-minkey+5), height-width/172.0);  // spread out position to cover majority of screen
    int h = width/(maxkey-minkey);
    int w = width/(maxkey-minkey);
-   Note note = new Note(c, pitch, len, time, volume, position, w, h);
+   Note note = new Note(c, pitch, len, time_, volume, position, w, h);
    notes.add(note);
  }
  // make a bullet for each note
@@ -142,20 +149,27 @@ void draw() {
     bullet.display();
   }
   
-  if (rendermode == true && millis()*1000 - renderdelay - renderprev > (1000000.0/60)){
-    //if (rendermode == true){
-      println(millis()*1000 - renderdelay - renderprev);
+  //if (rendermode == true && millis()*1000 - renderdelay - renderprev > (1000000.0/60)){
+  //  //if (rendermode == true){
+  //    println(millis()*1000 - renderdelay - renderprev);
+  //  savecount += 1;
+  //  long tic = System.nanoTime();
+  //  //saveFrame(dataPath("") + String.format("\\Frames\\Mozart_Moonlight_Part3\\%06d", savecount) + ".png");
+  //  saveFrame(String.format("E:\\eric_temp\\%06d", savecount) + ".tga");
+  //  long toc = System.nanoTime() - tic;
+  //  renderdelay += toc/1000.0;
+  //  renderprev = millis()*1000 - renderdelay;
+  //  }
+  
+   if (framemode == true){
+    time += 1000000.0/fps;
     savecount += 1;
-    long tic = System.nanoTime();
-    //saveFrame(dataPath("") + String.format("\\Frames\\Mozart_Moonlight_Part3\\%06d", savecount) + ".png");
     saveFrame(String.format("E:\\eric_temp\\%06d", savecount) + ".tga");
-    long toc = System.nanoTime() - tic;
-    renderdelay += toc/1000.0;
-    renderprev = millis()*1000 - renderdelay;
-    
-    
     }
   
+  if (time >= maxtime + outrotime){
+    exit(); 
+  }
 }
 
 long micros(){

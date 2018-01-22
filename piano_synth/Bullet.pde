@@ -35,7 +35,13 @@ class Bullet {
  }
  
  void display(){
-   int time = millis()*1000 - renderdelay;  // grab current time
+   
+   if (framemode == true){
+     
+   }
+   else{
+     time = millis()*1000 - renderdelay;  // grab current time
+   }
    if (time > fire_time && time < hit_t){  // if time is in the bullet firing range
      int brightness = int(((time-fire_time)*1.0/(hit_t-fire_time)*2)*255);  // adjust brightness based on time
      float hue = hue(c);  // grab hue and saturation to adjust brightness when displaying
