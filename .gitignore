@@ -5,3 +5,8 @@ application.linux64
 application.windows32
 application.windows64
 application.macosx
+
+piano_synth/data/Movies/
+piano_synth/data/Frames/
+
+piano_synth/data/MP3 Files/
