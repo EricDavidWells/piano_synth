@@ -23,15 +23,15 @@ class Bullet {
     }
     
     // calculate the bullet fire time
-    float v1 = sqrt(2*g*(h-(height-gun_pos.y)));  // initial y velocity to reach target height
-    float v2 = sqrt(2*g*((h-(height-gun_pos.y))+(height-gun_pos.y)-(height-note.pos.y)));  // bullet hit velocity
+    float v1 = sqrt(2.0*g*(h-(height-gun_pos.y)));  // initial y velocity to reach target height
+    float v2 = sqrt(2.0*g*((h-(height-gun_pos.y))+(height-gun_pos.y)-(height-note.pos.y)));  // bullet hit velocity
     float t = (v1+v2)/g;  // flight time
     float bullet_dx = note.pos.x - gun_pos.x;  // x distance
     float vx = bullet_dx/t;  // initial x velocity
     
     vel = new PVector(vx, -v1);  // set velocity to the initial velocity
     fire_time = hit_t - int(t*1e6);  // calculate the time to fire the bullet
-    prev_time = fire_time;  // pre allocate the previous time for driving function //<>//
+    prev_time = fire_time;  // pre allocate the previous time for driving function //<>// //<>//
  }
  
  void display(){
@@ -47,7 +47,7 @@ class Bullet {
      float hue = hue(c);  // grab hue and saturation to adjust brightness when displaying
      float sat = saturation(c);
      stroke(hue, sat, brightness);
-     fill(hue, sat, brightness); //<>//
+     fill(hue, sat, brightness); //<>// //<>//
      ellipse(pos.x, pos.y, r, r);
      drive(time);  // move bullet
    }
