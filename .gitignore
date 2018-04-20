@@ -8,5 +8,6 @@ application.macosx
 
 piano_synth/data/Movies/
 piano_synth/data/Frames/
-
+piano_synth/data/MidiFiles/
+piano_synth/data/NoteFiles/
 piano_synth/data/MP3 Files/

@@ -21,7 +21,7 @@ class Note {
    
    // adjust color to rainbow based on position
    if (c == color(0, 0, 0)){
-     c = color(p_*255/88, 255, 255);
+     c = color((p_*255/88 + 100)%255, 255, 255);
    }
  }
 
