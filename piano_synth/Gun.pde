@@ -15,6 +15,6 @@ class Gun {
  void display(){
   stroke(c);
   fill(c);
-  image(img, pos.x, pos.y);
+  image(img, pos.x-width/90, pos.y+width/90);
  }
 }
