@@ -9,20 +9,20 @@ My attempt at creating a colorful visualization of common .midi files.  A cannon
 
 * Place midi file in the data/MidiFiles folder.
 
-* Open up `midi_converter.py`, 
+* Open up `midi_converter.py'
 
-** change the `midifilename` variable to match the .midi file
+    * Change the `midifilename` variable to match the .midi file
 
-** change the `outputfilename` variable to match the song title
+    * Change the `outputfilename` variable to match the song title
 
-** run the script
+* Run the script
 
 * Open the processing script `piano_synth`
 
-** Change the `midifilename` variable to match the .midi file
-** Change the `notefilename` variable to match the newly created .csv file from the python script
+    * Change the `midifilename` variable to match the .midi file
+    * Change the `notefilename` variable to match the newly created .csv file from the python script
 
-** Run the program
+* Run the program
 
 # Notes
 Not all .midi files work, tracks with multiple instruments and older files tend to fail
