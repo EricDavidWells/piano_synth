@@ -1,5 +1,7 @@
 My attempt at creating a colorful visualization of common .midi files.  A cannon launches colorful balls which land at corresponding notes pitches.  The height of the ball reflects the note volume. Look [https://www.youtube.com/watch?v=FQs-HAAVmhs](here) for an example.
 
+![](piano_synth/data/Pictures/screenshot.png)
+
 # Requirements
 * Python 3.6
 * mido 1.2.8
