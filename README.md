@@ -1,4 +1,4 @@
-My attempt at creating a colorful visualization of common .midi files.  A cannon launches colorful balls which land at corresponding notes pitches.  The height of the ball reflects the note volume. Look [https://www.youtube.com/watch?v=FQs-HAAVmhs](here) for an example.
+My attempt at creating a colorful visualization of common .midi files.  A cannon launches colorful balls which land on note timings.  The horizontal position of the landing spot represents the pitch of the note, while the height of the corresponding bar that appears corresponds to the volume of the note. Look [https://www.youtube.com/watch?v=FQs-HAAVmhs](here) for an example.
 
 ![](piano_synth/data/Pictures/screenshot.png)
 
