@@ -9,7 +9,7 @@ boolean midistartflag = false;
 PImage bg;
 String bgfilename = "\\Pictures\\cloud_1.jpg";
 PImage gun_pic;
-String gunfilename = "\\Pictures\\manatee_4.png";
+String gunfilename = "\\Pictures\\moon_3.png";
 
 int gun_h;
 int gun_w; 
@@ -24,8 +24,8 @@ String[] notes_str;
 //String midifilename = "\\MidiFiles\\porz_goret.mid";
 //String notefilename = "\\NoteFiles\\mozart_2pianos_1.csv";
 //String midifilename = "\\MidiFiles\\mozart_2pianos_1.mid";
-String notefilename = "\\NoteFiles\\mozart_2pianos.csv";
-String midifilename = "\\MidiFiles\\mozart_2pianos.mid";
+String notefilename = "\\NoteFiles\\Childish-Gambino-Redbone.csv";
+String midifilename = "\\MidiFiles\\Childish-Gambino-Redbone.mid";
 ArrayList<Note> notes;
 ArrayList<Bullet> bullets;
 Gun gun;
@@ -42,8 +42,8 @@ int maxkey = 0;
 int minkey = 88;
 int maxtime = 0;
 
-boolean soundmode = false;
-boolean framemode = true;
+boolean soundmode = true;
+boolean framemode = false;
 int renderdelay = 0;
 int renderprev = 0;
 int savecount = 0;
@@ -67,10 +67,14 @@ void setup() {
  gun_pic.resize(width/20, width/20);
  
  // create all gun shape parameters
- gun_h = height/30;
- gun_w = width/20;
- gun_x = width/2;
- gun_y = height/2;
+ //gun_h = height/30;
+ //gun_w = width/20;
+ //gun_x = width/2;
+ //gun_y = height/2;
+ gun_h = 0;
+ gun_w = 0;
+ gun_x = width/10;
+ gun_y = height/5;
  gun = new Gun(color(255), gun_x, gun_y, gun_pic);  // create gun object
  
  bullets = new ArrayList<Bullet>();
